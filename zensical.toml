@@ -1,5 +1,6 @@
 [project]
 site_name = "StegoEval"
+site_url = "https://uttufy.github.io/StegoEval/"
 site_description = "A modular benchmarking framework for steganography algorithms."
 repo_url = "https://github.com/uttufy/StegoEval"
 repo_name = "uttufy/StegoEval"
