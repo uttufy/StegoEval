@@ -1,0 +1,36 @@
+[project]
+name = "stegoeval"
+version = "0.1.0"
+description = "A modular benchmarking framework to evaluate steganography algorithms under real-world conditions."
+authors = [
+    { name = "stegoeval", email = "stegoeval@example.com" }
+]
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "numpy",
+    "opencv-python",
+    "scikit-image",
+    "scipy",
+    "matplotlib",
+    "pandas",
+    "tqdm",
+    "seaborn",
+    "typer",
+    "pydantic",
+    "requests",
+    "Pillow",
+    "pyyaml",
+    "tabulate"
+]
+
+[project.scripts]
+stegoeval = "stegoeval.cli:app"
+
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+include = ["stegoeval*"]
+
