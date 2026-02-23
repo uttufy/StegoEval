@@ -1,0 +1,61 @@
+[project]
+site_name = "StegoEval"
+site_description = "A modular benchmarking framework for steganography algorithms."
+repo_url = "https://github.com/uttufy/StegoEval"
+repo_name = "uttufy/StegoEval"
+
+nav = [
+    { "Home" = "index.md" },
+    { "Contributing" = "contributing.md" },
+    { "API Reference" = [
+        { "Core Models" = "api/core.md" },
+        { "Algorithms" = "api/algorithms.md" },
+        { "Metrics" = "api/metrics.md" },
+        { "Attacks" = "api/attacks.md" }
+    ] }
+]
+
+[project.theme]
+variant = "modern"
+
+[project.modules]
+directives = true
+# OR if using plugins
+[project.plugins.directives]
+allow_external = true  # Required to reach outside the /docs folder
+
+[project.features]
+navigation_tabs = true
+navigation_indexes = true
+search_suggest = true
+search_highlight = true
+
+[project.plugins.search]
+[project.plugins.mkdocstrings]
+handlers = { python = { paths = ["."], options = { show_source = true, show_root_heading = true } } }
+
+[project.markdown_extensions.admonition]
+[project.markdown_extensions."pymdownx.details"]
+[project.markdown_extensions."pymdownx.superfences"]
+[project.markdown_extensions."pymdownx.highlight"]
+anchor_linenums = true
+line_spans = "__span"
+pygments_lang_class = true
+[project.markdown_extensions."pymdownx.inlinehilite"]
+[project.markdown_extensions."pymdownx.snippets"]
+[project.markdown_extensions."pymdownx.tabbed"]
+alternate_style = true
+
+# Palette toggle for light mode
+[[project.theme.palette]]
+media = "(prefers-color-scheme: light)"
+scheme = "default"
+toggle.icon = "lucide/sun"
+toggle.name = "Switch to dark mode"
+
+# Palette toggle for dark mode
+[[project.theme.palette]]
+media = "(prefers-color-scheme: dark)"
+scheme = "slate"
+toggle.icon = "lucide/moon"
+toggle.name = "Switch to light mode"

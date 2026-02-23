@@ -21,7 +21,8 @@ dependencies = [
     "requests",
     "Pillow",
     "pyyaml",
-    "tabulate"
+    "tabulate",
+    "zensical"
 ]
 
 [project.scripts]
