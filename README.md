@@ -29,11 +29,35 @@ python scripts/download_datasets.py
 
 ## Usage
 
+### Run Full Benchmark
+
 Run a benchmark using a YAML configuration file:
 
 ```bash
 stegoeval run --config config/default_config.yaml
 ```
+
+Capacity test is automatically run as part of the benchmark when enabled in config:
+
+```yaml
+capacity:
+  enabled: true
+  max_payload: 10000
+  step: 100
+```
+
+### Run Capacity Test Only
+
+Test the embedding capacity of algorithms separately:
+
+```bash
+stegoeval capacity --config config/default_config.yaml --max-payload 10000 --step 100
+```
+
+Options:
+- `--max-payload, -m`: Maximum payload size to test (default: 10000)
+- `--step, -s`: Step size for payload increments (default: 100)
+- `--limit, -l`: Limit number of images to test
 
 ## Metrics Dictionary
 

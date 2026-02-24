@@ -35,6 +35,41 @@ class AttackRunner:
             }
         }
 
+    def run_single_attack(self, image: np.ndarray, category: str, attack_name: str, params: dict) -> np.ndarray:
+        """
+        Run a single attack on an image.
+        
+        Args:
+            image: Input image as numpy.ndarray
+            category: Attack category (compression, noise, filtering, geometric)
+            attack_name: Name of the attack
+            params: Dictionary of parameters for the attack
+            
+        Returns:
+            Attacked image as numpy.ndarray
+        """
+        if category not in self.attack_registry:
+            raise ValueError(f"Unknown attack category: {category}")
+        
+        if attack_name not in self.attack_registry[category]:
+            raise ValueError(f"Unknown attack '{attack_name}' in category '{category}'")
+        
+        attack_func = self.attack_registry[category][attack_name]
+        
+        try:
+            # Check if params is a dict or a single value
+            if isinstance(params, dict):
+                attacked_img = attack_func(image, **params)
+            else:
+                # Single implicit value - inspect function to get parameter name
+                sig = inspect.signature(attack_func)
+                first_kwarg = list(sig.parameters.keys())[1]
+                kwargs = {first_kwarg: params}
+                attacked_img = attack_func(image, **kwargs)
+            return attacked_img
+        except Exception as e:
+            raise RuntimeError(f"Attack {attack_name}.{category} failed: {e}")
+
     def run_attacks(self, image: np.ndarray, config: dict):
         """
         Runs a series of attacks on an image based on the provided configuration.

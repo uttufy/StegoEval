@@ -1,26 +1,51 @@
-dataset_path: "./data"
-dataset_limit: 5  # Set to null or remove to run on all images in dataset_path
-payload: "SECRET DATA"
+# StegoEval Configuration
+# Real-world benchmark attack levels
 
+dataset_path: "./data"
+dataset_limit: 5  # Set to null or remove to run on all images
+payload: "STEGOEVAL_SECRET"
+payload_sizes: [10, 100, 1000]
+
+# Run configuration
+run_name: "benchmark"
+combo_attacks: false
+
+# Capacity test configuration
+capacity:
+  enabled: true
+  max_payload: 1000
+  step: 10
+
+# Attack configurations - Real-world levels
 attacks:
+  # Compression attacks - quality percentages
   compression:
-    jpeg: [95, 85, 70, 50, 30]
-    webp: [95, 85]
+    jpeg: [10, 20, 50, 60, 80, 90]
+    webp: [10, 20, 50, 60, 80, 90]
   
+  # Noise attacks
   noise:
     gaussian:
       - mean: 0.0
         var: 0.01
       - mean: 0.0
         var: 0.05
-    salt_pepper: [0.05]
-    speckle: [0.04]
+      - mean: 0.0
+        var: 0.1
+    salt_pepper: [0.01, 0.05, 0.1]
+    speckle: [0.01, 0.05, 0.1]
     
+  # Blur/Filtering attacks - kernel sizes
   filtering:
-    gaussian_blur: [3, 5, 7]
-    median: [3, 5]
+    gaussian_blur: [3, 5, 7, 9, 11]
+    median: [3, 5, 7]
+    motion: [3, 5, 7]
     
+  # Geometric attacks
   geometric:
-    rotation: [2.0, 5.0]
-    scaling: [1.5, 0.8]
-    cropping: [0.1]
+    # Rotation angles (degrees)
+    rotation: [2.0, 5.0, 10.0, 15.0, 30.0]
+    # Scaling factors
+    scaling: [0.5, 0.8, 1.2, 1.5, 2.0]
+    # Cropping percentages
+    cropping: [0.01, 0.05, 0.1, 0.2, 0.3, 0.5]

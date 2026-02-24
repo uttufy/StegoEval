@@ -10,3 +10,4 @@ pymdown-extensions
 # --- Extra Utilities ---
 # Recommended for headless server environments like GitHub Actions
 opencv-python-headless
+wonderwords

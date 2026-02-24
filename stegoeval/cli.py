@@ -20,7 +20,10 @@ def info():
 @app.command("run")
 def run_benchmark(
     config_path: str = typer.Option(..., "--config", "-c", help="Path to the YAML configuration file"),
-    output_dir: str = typer.Option("./results", "--output", "-o", help="Directory to save evaluation results")
+    output_dir: str = typer.Option("./results", "--output", "-o", help="Directory to save evaluation results"),
+    run_name: str = typer.Option("benchmark", "--name", "-n", help="Name for this benchmark run (used in output files)"),
+    combo_attacks: bool = typer.Option(False, "--combo-attacks", help="Run combination attacks (all attack combinations - slower)"),
+    limit: Optional[int] = typer.Option(None, "--limit", "-l", help="Limit number of images to test")
 ):
     """
     Run the benchmarking workflow using the provided configuration.
@@ -31,6 +34,14 @@ def run_benchmark(
     try:
         with open(config_path, "r") as f:
             raw_config = yaml.safe_load(f)
+        
+        # Override config with CLI arguments
+        if run_name:
+            raw_config['run_name'] = run_name
+        if combo_attacks:
+            raw_config['combo_attacks'] = combo_attacks
+        if limit is not None:
+            raw_config['dataset_limit'] = limit
         
         # Validate config
         config = StegoEvalConfig(**raw_config).model_dump()
@@ -43,6 +54,8 @@ def run_benchmark(
     limit_str = str(config['dataset_limit']) if config['dataset_limit'] else 'All'
     typer.echo(f"Dataset limit: {limit_str}")
     typer.echo(f"Output directory: {output_dir}")
+    typer.echo(f"Run name: {config['run_name']}")
+    typer.echo(f"Combo attacks: {config['combo_attacks']}")
 
     # Register algorithms to evaluate
     algorithms = [
@@ -59,9 +72,12 @@ def run_benchmark(
     # Run evaluation
     results = evaluator.evaluate()
     
-    # Generate Reports
-    reporter = ReportGenerator(output_dir=output_dir)
+    # Generate Reports (capacity is now included in evaluator if enabled)
+    reporter = ReportGenerator(output_dir=output_dir, run_name=config['run_name'])
     reporter.generate(results)
+
+    typer.echo(f"\n--- Benchmark Complete ---")
+    typer.echo(f"Results saved to: {output_dir}")
 
 if __name__ == "__main__":
     app()

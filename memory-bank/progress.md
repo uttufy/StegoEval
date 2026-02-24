@@ -10,19 +10,21 @@
 - **Attack Engine** — 12 attack functions across 4 categories (compression, noise, filtering, geometric) with registry-based dispatch.
 - **Distortion Metrics** — MSE, RMSE, PSNR, SSIM, AAD, NAD, NCC with dimension mismatch handling.
 - **Robustness Metrics** — BER and NCC for text payloads; NPCR and UACI available for image payloads.
-- **Reporting** — CSV export and grouped Markdown summary table generation.
+- **Reporting** — CSV export (per attack type), Markdown summary, and StegnoEval scores.
 - **LSB Algorithm** — Built-in reference implementation with binary embedding/extraction.
 - **CLI Adapter** — `GenericCLIAdapter` template for integrating external CLI tools (subprocess-based).
-- **Documentation** — Zensical-powered docs auto-deployed to GitHub Pages.
+- **Documentation** — Zensical-powered docs auto-deployed to GitHub Pages + CSV structure docs.
 - **Setup Script** — `setup.sh` for one-command environment setup.
+- **StegnoEval Score** — Composite scoring system (0-100) based on distortion + robustness.
+- **Combo Attacks** — Flag to run all attack combinations.
+- **Run Names** — Custom benchmark run names for output files.
+- **Real-world Attack Levels** — Comprehensive attack levels (JPEG 10-90%, blur kernels 3-11, etc.)
 
 ## What's Left to Build 🔲
 
 - [ ] Unit / integration tests (empty `tests/` directory).
 - [ ] Additional steganography algorithms beyond LSB (e.g., DCT-based, DWT-based, IWT-SVD).
-- [ ] Re-enable and polish plot generation (currently commented out).
-- [ ] Wire `payload` and `payload_sizes` from YAML config into Evaluator.
-- [ ] Add composite survivability score metric.
+- [ ] Re-enable and polish plot generation (currently disabled).
 - [ ] Add steganalysis detection metrics (optional expansion).
 - [ ] Set up CI for tests (only docs CI exists).
 - [ ] Publish to PyPI.
@@ -31,13 +33,19 @@
 ## Known Issues ⚠️
 
 1. **Config `payload` field unused** — Evaluator generates random payloads instead of using the config's `payload` value.
-2. **`payload_sizes` not configurable** — Hardcoded default in evaluator, not sourced from YAML config.
-3. **Plots disabled** — `generate_plots()` call is commented out in `ReportGenerator.generate()`.
+2. **`payload_sizes` now configurable** — ✅ Fixed (added to config).
+3. **Plots disabled** — ✅ Fixed (explicitly disabled, can be re-enabled).
 4. **No test coverage** — `tests/` directory is empty.
 5. **Dimension mismatch after geometric attacks** — Handled via resize in metrics, but may introduce comparison artifacts.
 
 ## Project Evolution
 
-- **v0.1.0 (Current)** — MVP with full pipeline: config → load → embed → metrics → attacks → report. Single built-in algorithm (LSB). YAML-driven attack matrix. CSV + Markdown output.
-- **Related Project: StegoBench** — A more ambitious benchmarking framework design was explored in recent conversations, potentially informing future StegoEval features (survivability scoring, more sophisticated reporting).
-- **Related Project: DeepSign** — A broader steganography platform ecosystem (engine, worker, API, frontend) that this tool could integrate with for algorithm evaluation.
+- **v0.1.0 (MVP)** — Initial release with core pipeline.
+- **v0.2.0 (Current)** — Major update with:
+  - Real-world attack levels (JPEG 10-90%, blur 3-11, crop 1-50%, rotation ±2-30°, scale 0.5-2x)
+  - StegnoEval Score (0-100 composite score)
+  - Per-attack CSV outputs
+  - Combination attack support (flag: `--combo-attacks`)
+  - Custom run names (`--name`)
+  - Image filename as primary key for all CSVs
+  - Comprehensive CSV structure documentation
