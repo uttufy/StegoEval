@@ -14,6 +14,7 @@ from stegoeval.metrics.distortion import (
     calculate_ssim, calculate_aad, calculate_nad, calculate_correlation_coefficient
 )
 from stegoeval.metrics.robustness import calculate_ber, calculate_ncc_text
+from stegoeval.attacks.compression import apply_jpeg_compression
 
 
 class Evaluator:
@@ -377,6 +378,37 @@ class Evaluator:
         
         with tqdm(total=total_steps, desc="Evaluating", unit="step") as pbar:
             for img_name, cover_img in images:
+                # Add Baseline Test for the pure cover image (simulating a standard 95% JPEG save)
+                try:
+                    baseline_img = apply_jpeg_compression(cover_img, quality=95)
+                    baseline_result = {
+                        "image": img_name,
+                        "algorithm": "COVER_IMAGE_BASELINE",
+                        "payload_size": 0,
+                        "attack_category": "baseline",
+                        "attack_name": "clean_jpeg_save",
+                        "attack_params": "quality=95",
+                        
+                        # Baseline Distortion metrics (cover vs clean save)
+                        "mse": calculate_mse(cover_img, baseline_img),
+                        "rmse": calculate_rmse(cover_img, baseline_img),
+                        "psnr": calculate_psnr(cover_img, baseline_img),
+                        "ssim": calculate_ssim(cover_img, baseline_img),
+                        "aad": calculate_aad(cover_img, baseline_img),
+                        "nad": calculate_nad(cover_img, baseline_img),
+                        "ncc_image": calculate_correlation_coefficient(cover_img, baseline_img),
+                        
+                        # Robustness metrics (N/A for baseline)
+                        "ber": 0.0,
+                        "ncc_secret": 0.0,
+                        "payload_recovered": False,
+                        "embedded_payload": "N/A",
+                        "extracted_payload": "N/A"
+                    }
+                    self.results.append(baseline_result)
+                except Exception as e:
+                    print(f"Warning: Baseline calculation failed for {img_name}: {e}")
+
                 for algo in self.algorithms:
                     algo_name = algo.name()
                     

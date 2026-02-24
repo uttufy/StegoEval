@@ -20,26 +20,36 @@ class ReportGenerator:
         # Convert to DataFrame
         df = pd.DataFrame(results)
         
+        # 0. Extract and save Cover Image Baseline (if exists)
+        baseline_df = df[df['algorithm'] == 'COVER_IMAGE_BASELINE']
+        if not baseline_df.empty:
+            baseline_csv = os.path.join(self.output_dir, f"results-{self.run_name}-baseline.csv")
+            baseline_df.to_csv(baseline_csv, index=False)
+            print(f"Cover image baselines saved to {baseline_csv}")
+            
+        # Filter out the baseline so it doesn't skew algorithm scores
+        algo_df = df[df['algorithm'] != 'COVER_IMAGE_BASELINE']
+        
         # 1. Save main CSV with all results
         main_csv = os.path.join(self.output_dir, f"results-{self.run_name}.csv")
-        df.to_csv(main_csv, index=False)
-        print(f"Full results saved to {main_csv}")
+        algo_df.to_csv(main_csv, index=False)
+        print(f"Full algorithm results saved to {main_csv}")
         
         # 2. Generate per-attack-type CSVs
-        self._generate_attack_csvs(df)
+        self._generate_attack_csvs(algo_df)
         
         # 3. Generate scores file
-        self._generate_scores(df)
+        self._generate_scores(algo_df)
         
         # 4. Generate clean results CSV (no attack)
-        clean_df = df[df['attack_category'] == 'none']
+        clean_df = algo_df[algo_df['attack_category'] == 'none']
         if not clean_df.empty:
             clean_csv = os.path.join(self.output_dir, f"results-{self.run_name}-clean.csv")
             clean_df.to_csv(clean_csv, index=False)
             print(f"Clean results saved to {clean_csv}")
         
         # 5. Generate summary markdown
-        self._generate_summary(df)
+        self._generate_summary(algo_df)
         
         print("\n--- Benchmark Complete ---")
         print(f"Total evaluated items: {len(results)}")
