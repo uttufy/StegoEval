@@ -42,6 +42,9 @@ search_highlight = true
 handlers = { python = { paths = ["."], options = { show_source = true, show_root_heading = true } } }
 
 [project.markdown_extensions.admonition]
+[project.markdown_extensions.attr_list]
+[project.markdown_extensions.md_in_html]
+[project.markdown_extensions.pymdownx.blocks.caption]
 [project.markdown_extensions."pymdownx.details"]
 [project.markdown_extensions."pymdownx.superfences"]
 [project.markdown_extensions."pymdownx.highlight"]

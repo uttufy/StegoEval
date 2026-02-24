@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="assets/logos/flare.png" alt="StegoEval Logo" width="200" />
+  <img src="docs/assets/logos/flare.png" alt="StegoEval Logo" width="200" />
 </p>
 
 # StegoEval
