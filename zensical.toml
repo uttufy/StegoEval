@@ -13,6 +13,12 @@ nav = [
         { "Algorithms" = "api/algorithms.md" },
         { "Metrics" = "api/metrics.md" },
         { "Attacks" = "api/attacks.md" }
+    ] },
+    { "Documentation" = [
+        { "CSV Structure" = "csv-structure.md" },
+        { "Scoring System" = "scoring.md" },
+        { "Default Configs" = "default-configs.md" },
+        { "Limitations" = "limitations.md" }
     ] }
 ]
 
